@@ -8,12 +8,12 @@
     android:orientation="horizontal" >
 
     <fragment
-        android:name="com.example.alejandro.moviebook.MoviesFragment"
+        android:name="com.example.alejandro.moviebook.MovieFragment"
         android:id="@+id/moviesContainerFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="35"
-        tools:layout="@layout/fragment_movies" />
+        tools:layout="@layout/fragment_movie" />
 
     <fragment
         android:name="com.example.alejandro.moviebook.MovieDetailsFragment"

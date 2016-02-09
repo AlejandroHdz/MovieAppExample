@@ -13,9 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
-public class MainActivity extends AppCompatActivity implements MoviesFragment.OnMovieSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     private ViewGroup fragmentPhone, fragmentTablet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,21 +28,12 @@ public class MainActivity extends AppCompatActivity implements MoviesFragment.On
 
         }else {
             if(savedInstanceState == null){
-                MoviesFragment moviesFragment = new MoviesFragment();
+                MovieFragment moviesFragment = new MovieFragment();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(fragmentPhone.getId(),moviesFragment,MoviesFragment.class.getName());
+                fragmentTransaction.replace(fragmentPhone.getId(),moviesFragment,MovieFragment.class.getName());
                 fragmentTransaction.commit();
             }
         }
-
-        // Buscando espacio para MoviesDetailsFragment
-        /*fragmentTablet = (ViewGroup) findViewById(R.id.movieDetailsFragment);
-        if(fragmentTablet != null){
-            MovieDetailsFragment movieDetailsFragment = new MovieDetailsFragment();
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(fragmentTablet.getId(),movieDetailsFragment,MovieDetailsFragment.class.getName());
-            fragmentTransaction.commit();
-        }*/
     }
 
     @Override
@@ -65,8 +57,4 @@ public class MainActivity extends AppCompatActivity implements MoviesFragment.On
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void OnMovieSelected(int position) {
-
-    }
 }
