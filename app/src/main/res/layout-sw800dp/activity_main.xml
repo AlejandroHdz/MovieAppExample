@@ -7,7 +7,7 @@
     android:baselineAligned="false"
     android:orientation="horizontal" >
 
-    <fragment
+    <FrameLayout
         android:name="com.example.alejandro.moviebook.MovieFragment"
         android:id="@+id/moviesContainerFragment"
         android:layout_width="0dp"
@@ -15,7 +15,7 @@
         android:layout_weight="35"
         tools:layout="@layout/fragment_movie" />
 
-    <fragment
+    <FrameLayout
         android:name="com.example.alejandro.moviebook.MovieDetailsFragment"
         android:id="@+id/moviesDetailsFragment"
         android:layout_width="0dp"
