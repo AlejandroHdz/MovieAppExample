@@ -84,6 +84,7 @@ public class RecyclerMovieAdapter extends RecyclerView.Adapter<RecyclerMovieAdap
                     arguments.putString("movieRate",movieRate[getAdapterPosition()]);
 
                     detailsFragment.setArguments(arguments);
+
                     if (tablet){
                         Log.e("TheTabletWORKING","DADADADAD");
                         fragmentTransaction.add(R.id.moviesDetailsFragment,detailsFragment).addToBackStack("");

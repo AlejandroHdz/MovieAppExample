@@ -48,7 +48,7 @@ public class MovieDetailsFragment extends Fragment {
             movieRate = getArguments().getString("movieRate");
             movieOverview = getArguments().getString("movieOverview");
 
-            Log.e("IMAGEEE--->",moviePosterURL);
+            Log.e("IMAGEEE--->",movieTitle);
 
             Picasso.with(view.getContext()).load(moviePosterURL).into(imgPoster);
             txtTitle.setText(movieTitle);
@@ -56,7 +56,6 @@ public class MovieDetailsFragment extends Fragment {
             txtRate.setText(movieRate);
             txtOverview.setText(movieOverview); txtOverview.setMovementMethod(new ScrollingMovementMethod());
         }
-
         return view;
     }
 
