@@ -1,8 +1,13 @@
 <resources>
-    <string name="app_name">MovieBook</string>
+    <string name="app_name">Mis Películas</string>
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="movies_title">Movies</string>
+    <string name="favorite">Favorites</string>
+    <string name="topten">Top 10</string>
+    <string name="popular">Popular</string>
+    <string name="title_example">Deadpool</string>
+    <string name="overview_example">En esta pelicula se presenta la lucha incansable entre el protagonista y el antagonista, ellos se preparan para un enfrentamiento final, ¿Quién ganará?</string>
 </resources>

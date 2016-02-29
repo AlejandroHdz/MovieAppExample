@@ -3,8 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.alejandro.moviebook.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/menu_favorite"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:title="@string/favorite"
+        android:icon="@drawable/favorite_icon"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_topten"
+        android:orderInCategory="200"
+        android:title="@string/topten"
+        android:icon="@drawable/top_icon"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_popular"
+        android:orderInCategory="300"
+        android:title="@string/popular"
+        android:icon="@drawable/popular_icon"
+        app:showAsAction="ifRoom"/>
 </menu>

@@ -1,6 +1,7 @@
 package com.example.alejandro.moviebook;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -19,31 +20,112 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity {
 
     private ViewGroup fragmentTablet;
+    String []movieTitle, movieDate, movieRate, movieOverview,posterPath, moviePosterUrl;
+    String urlIma= "http://image.tmdb.org/t/p/w500";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /////////////////////////////////////////////////////////////////////////////////////////////GETTING JSONOBJECT
+        // Tag used to cancel the request
+        String tag_json_obj = "json_obj_req";
+        String url = "http://api.themoviedb.org/3/movie/top_rated?api_key=9745f064cdd1c6e1fa1f9c8b39c9fe48";
+
+        final ProgressDialog pDialog = new ProgressDialog(MainActivity.this);
+        pDialog.setMessage("Loading...");
+        pDialog.show();
+
         //Buscando el espacio para MoviesFragment
         if(savedInstanceState == null){
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            MovieFragment moviesFragment = new MovieFragment();
-            MovieDetailsFragment detailsFragment = new MovieDetailsFragment();
 
-            Bundle arguments = new Bundle();
-            arguments.putBoolean("tabletInfo", isTablet());
-            moviesFragment.setArguments(arguments);
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                    url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d("JSONOBJECT", response.toString());
+                            pDialog.hide();
+                            try {
+                                JSONArray jsonArrayResults = response.getJSONArray("results");
+                                Log.d("THERESULTS--->>",jsonArrayResults.toString());
+                                // Inicializamos arreglos
+                                movieTitle = new String[jsonArrayResults.length()];
+                                movieDate = new String[jsonArrayResults.length()];
+                                movieOverview = new String[jsonArrayResults.length()];
+                                movieRate = new String[jsonArrayResults.length()];
+                                posterPath = new String[jsonArrayResults.length()];
+                                moviePosterUrl = new String[jsonArrayResults.length()];
 
-            fragmentTransaction.replace(R.id.moviesContainerFragment, moviesFragment);
+                                for (int i=0;i<jsonArrayResults.length();i++){
+                                    JSONObject jsonObjectMovie = jsonArrayResults.getJSONObject(i);
+                                    movieTitle[i] = jsonObjectMovie.optString("title");
+                                    movieDate[i] = jsonObjectMovie.optString("release_date");
+                                    movieOverview[i] = jsonObjectMovie.optString("overview");
+                                    movieRate[i] = jsonObjectMovie.optString("vote_average");
+                                    posterPath[i] = jsonObjectMovie.optString("poster_path");
+                                    moviePosterUrl[i] = urlIma+posterPath[i];
 
-            if (isTablet()){
-                fragmentTransaction.replace(R.id.moviesDetailsFragment, detailsFragment);
-            }
-            fragmentTransaction.commit();
+                                    /*Log.d("LENGHT--->>>", Integer.toString(i));
+                                    Log.d("TITLE--->>>>>>>", movieTitle[i]);
+                                    Log.d("TITLE--->>>>>>>", movieDate[i]);
+                                    Log.d("TITLE--->>>>>>>", movieOverview[i]);
+                                    Log.d("TITLE--->>>>>>>", movieRate[i]);
+                                    Log.d("TITLE--->>>>>>>", moviePosterUrl[i]);*/
+                                    if (i==19){
+                                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                                        MovieFragment moviesFragment = new MovieFragment();
+                                        MovieDetailsFragment detailsFragment = new MovieDetailsFragment();
+
+                                        //Log.e("INFOOO-->>>",moviePosterUrl.toString());
+                                        Bundle arguments = new Bundle();
+                                        arguments.putBoolean("tabletInfo", isTablet());
+                                        arguments.putStringArray("moviePosterURL", moviePosterUrl);
+                                        arguments.putStringArray("movieTitle",movieTitle);
+                                        arguments.putStringArray("movieDate",movieDate);
+                                        arguments.putStringArray("movieRate",movieRate);
+                                        arguments.putStringArray("movieOverview",movieOverview);
+                                        moviesFragment.setArguments(arguments);
+
+                                        fragmentTransaction.add(R.id.moviesContainerFragment, moviesFragment);
+
+                                        if (isTablet()){
+                                            detailsFragment.setArguments(arguments);
+                                            fragmentTransaction.add(R.id.moviesDetailsFragment, detailsFragment);
+                                        }
+                                        fragmentTransaction.commit();
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    VolleyLog.d("JSONOBJECTERRORRRRR", "Error: " + error.getMessage());
+                    // hide the progress dialog
+                    pDialog.hide();
+
+                }
+            });
+// Adding request to request queue
+            AppController.getInstance().addToRequestQueue(jsonObjReq, tag_json_obj);
+            ////*******************************************************************************************JSONBOJECT
         }
 
     }
@@ -71,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.menu_favorite) {
             return true;
         }
         return super.onOptionsItemSelected(item);

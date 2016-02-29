@@ -3,16 +3,102 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.alejandro.moviebook.MovieDetailsFragment"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorWhite">
+
+    <ImageView
+        android:id="@+id/moviePoster"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        android:layout_margin="16dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/deadpool_movie"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/txtTitle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Movie Details"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="2dp"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@id/moviePoster"
+        android:gravity="end"
+        android:text="@string/title_example"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/txtDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_below="@+id/txtTitle"
+        android:layout_toRightOf="@id/moviePoster"
+        android:gravity="end"
+        android:text="2015-21-10"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="2dp"
+        android:layout_toRightOf="@+id/moviePoster"
+        android:layout_above="@+id/Rate"
+        android:text="Rating:"
         android:textStyle="bold"
-        android:textSize="30sp"
-        android:textColor="#99FFFFFF"/>
+        android:textSize="20sp"/>
+
+    <LinearLayout
+        android:id="@+id/Rate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/moviePoster"
+        android:layout_alignBottom="@+id/moviePoster"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/star_rating"
+            android:tint="@color/colorAccent"/>
+        <TextView
+            android:id="@+id/txtRate"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="9.9 Rate"
+            android:textSize="22sp"
+            android:tint="@color/colorAccent"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/overview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_below="@+id/moviePoster"
+        android:text="Reseña:"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/txtOverView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="18dp"
+        android:layout_below="@+id/overview"
+        android:gravity="fill"
+        android:text="@string/overview_example"
+        android:textSize="16sp"
+        android:scrollbars="vertical"/>
 
 </RelativeLayout>

@@ -1,29 +1,24 @@
 package com.example.alejandro.moviebook;
 
+import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 public class MovieFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     boolean flagIsTablet;
-
-    int[] moviePoster={
-            R.drawable.deadpool_movie,R.drawable.deadpool_movie,
-            R.drawable.deadpool_movie,R.drawable.deadpool_movie,
-            R.drawable.deadpool_movie,R.drawable.deadpool_movie};
+    String[] moviePosterURL, movieTitle, movieDate, movieRate, movieOverview;
 
     public MovieFragment() {
         // Required empty public constructor
@@ -47,17 +42,23 @@ public class MovieFragment extends Fragment {
 
         if (getArguments() != null) {
             flagIsTablet = getArguments().getBoolean("tabletInfo");
+            moviePosterURL = getArguments().getStringArray("moviePosterURL");
+            movieTitle = getArguments().getStringArray("movieTitle");
+            movieDate = getArguments().getStringArray("movieDate");
+            movieRate = getArguments().getStringArray("movieRate");
+            movieOverview = getArguments().getStringArray("movieOverview");
         }
         // use a layout manager depending on orientation
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         }else if (flagIsTablet){
-            mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),3));
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         }else{
             mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),5));
         }
         // create an Object for Adapter
-        mAdapter = new RecyclerMovieAdapter(moviePoster);
+        android.support.v4.app.FragmentManager fm = getFragmentManager();
+        mAdapter = new RecyclerMovieAdapter(moviePosterURL,fm,flagIsTablet,movieTitle,movieDate,movieRate,movieOverview);
         // set the adapter object to the Recyclerview
         mRecyclerView.setAdapter(mAdapter);
 
