@@ -1,7 +1,6 @@
 package com.example.alejandro.moviebook;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
@@ -12,17 +11,23 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.like.LikeButton;
+import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
+
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 public class MovieDetailsFragment extends Fragment {
 
     String moviePosterURL, movieTitle, movieDate, movieRate, movieOverview;
     ImageView imgPoster;
     TextView txtTitle, txtDate, txtRate, txtOverview;
+    LikeButton likeButton;
 
-    public MovieDetailsFragment() {
-    // Empty Constructor
-    }
+    public MovieDetailsFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,13 +38,17 @@ public class MovieDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
+        final View view = inflater.inflate(R.layout.fragment_movie_details, container, false);
+
+        final RealmConfiguration realmConfig = new RealmConfiguration.Builder(view.getContext()).build();
+        final Realm realm = Realm.getInstance(realmConfig);
 
         imgPoster = (ImageView) view.findViewById(R.id.moviePoster);
         txtTitle = (TextView) view.findViewById(R.id.txtTitle);
         txtDate = (TextView) view.findViewById(R.id.txtDate);
         txtRate = (TextView) view.findViewById(R.id.txtRate);
         txtOverview = (TextView) view.findViewById(R.id.txtOverView);
+        likeButton = (LikeButton) view.findViewById(R.id.favorite_button);
 
         if(getArguments() != null){
             moviePosterURL = getArguments().getString("moviePosterURL");
@@ -48,13 +57,37 @@ public class MovieDetailsFragment extends Fragment {
             movieRate = getArguments().getString("movieRate");
             movieOverview = getArguments().getString("movieOverview");
 
-            Log.e("IMAGEEE--->",movieTitle);
+            likeButton.setLiked(false);
 
             Picasso.with(view.getContext()).load(moviePosterURL).into(imgPoster);
             txtTitle.setText(movieTitle);
             txtDate.setText(movieDate);
             txtRate.setText(movieRate);
             txtOverview.setText(movieOverview); txtOverview.setMovementMethod(new ScrollingMovementMethod());
+
+            likeButton.setOnLikeListener(new OnLikeListener() {
+                @Override
+                public void liked(LikeButton likeButton) {
+
+                    FavoriteMovie movie = new FavoriteMovie();
+                    movie.setName(movieTitle);
+                    movie.setDate(movieDate);
+                    movie.setUrl(moviePosterURL);
+                    movie.setRate(movieRate);
+                    movie.setOverview(movieOverview);
+
+                    realm.beginTransaction();
+                    realm.copyToRealm(movie);
+                    realm.commitTransaction();
+
+                    likeButton.setLiked(true);
+                }
+
+                @Override
+                public void unLiked(LikeButton likeButton) {
+                    likeButton.setLiked(false);
+                }
+            });
         }
         return view;
     }

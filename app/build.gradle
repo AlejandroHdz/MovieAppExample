@@ -28,4 +28,6 @@ dependencies {
     compile 'io.realm:realm-android:0.87.4'
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'io.realm:realm-android:0.87.5'
+    compile 'com.github.jd-alexander:LikeButton:0.1.8'
 }
