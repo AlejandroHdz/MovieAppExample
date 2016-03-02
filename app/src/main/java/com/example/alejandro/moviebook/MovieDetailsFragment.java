@@ -57,7 +57,14 @@ public class MovieDetailsFragment extends Fragment {
             movieRate = getArguments().getString("movieRate");
             movieOverview = getArguments().getString("movieOverview");
 
-            likeButton.setLiked(false);
+            //FavoriteMovie movie = new FavoriteMovie();
+            RealmResults<FavoriteMovie> results = realm.where(FavoriteMovie.class).equalTo("name",movieTitle).findAll();
+            if (results.size() == 1){
+                likeButton.setLiked(true);
+            }else{
+                likeButton.setLiked(false);
+            }
+
 
             Picasso.with(view.getContext()).load(moviePosterURL).into(imgPoster);
             txtTitle.setText(movieTitle);
@@ -76,16 +83,28 @@ public class MovieDetailsFragment extends Fragment {
                     movie.setRate(movieRate);
                     movie.setOverview(movieOverview);
 
+                    RealmResults<FavoriteMovie> results = realm.where(FavoriteMovie.class).findAll();
                     realm.beginTransaction();
-                    realm.copyToRealm(movie);
+
+                    realm.copyToRealmOrUpdate(movie);
                     realm.commitTransaction();
 
                     likeButton.setLiked(true);
+                    //RealmResults<FavoriteMovie> resultsone = realm.where(FavoriteMovie.class).findAll();
+                    results.size();
+                    Log.e("RESULTS--->",results.toString());
                 }
 
                 @Override
                 public void unLiked(LikeButton likeButton) {
+
                     likeButton.setLiked(false);
+                    FavoriteMovie movie = new FavoriteMovie();
+                    RealmResults<FavoriteMovie> results = realm.where(FavoriteMovie.class).equalTo("name",movieTitle).findAll();
+                    realm.beginTransaction();
+                    results.clear();
+                    realm.commitTransaction();
+
                 }
             });
         }

@@ -58,10 +58,11 @@ public class MovieFragment extends Fragment {
         }
         // create an Object for Adapter
         android.support.v4.app.FragmentManager fm = getFragmentManager();
+
+        mRecyclerView.removeAllViews();
         mAdapter = new RecyclerMovieAdapter(moviePosterURL,fm,flagIsTablet,movieTitle,movieDate,movieRate,movieOverview);
         // set the adapter object to the Recyclerview
         mRecyclerView.setAdapter(mAdapter);
-
 
         return view;
     }

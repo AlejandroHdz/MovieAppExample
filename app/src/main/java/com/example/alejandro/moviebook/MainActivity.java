@@ -31,6 +31,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
+
 public class MainActivity extends AppCompatActivity {
 
     private ViewGroup fragmentTablet;
@@ -162,6 +166,53 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.menu_favorite) {
+
+            final RealmConfiguration realmConfig = new RealmConfiguration.Builder(MainActivity.this).build();
+            final Realm realm = Realm.getInstance(realmConfig);
+
+            RealmResults<FavoriteMovie> results = realm.where(FavoriteMovie.class).findAll();
+            moviePosterUrl = new String[moviePosterUrl.length];
+            movieTitle = new String[movieTitle.length];
+            movieDate = new String[movieDate.length];
+            movieRate = new String[movieRate.length];
+            movieOverview = new String[movieOverview.length];
+            for(int i=0;i<results.size();i++){
+                moviePosterUrl[i] = results.get(i).getUrl();
+                movieTitle[i] = results.get(i).getName();
+                movieDate[i] = results.get(i).getDate();
+                movieRate[i] = results.get(i).getRate();
+                movieOverview[i] = results.get(i).getOverview();
+
+                if (i==(results.size()-1)){
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    MovieFragment moviesFragment = new MovieFragment();
+                    MovieDetailsFragment detailsFragment = new MovieDetailsFragment();
+                    //Log.e("INFOOO-->>>",moviePosterUrl.toString());
+                    Bundle arguments = new Bundle();
+                    arguments.putBoolean("tabletInfo", isTablet());
+                    arguments.putStringArray("moviePosterURL", moviePosterUrl);
+                    arguments.putStringArray("movieTitle",movieTitle);
+                    arguments.putStringArray("movieDate",movieDate);
+                    arguments.putStringArray("movieRate",movieRate);
+                    arguments.putStringArray("movieOverview",movieOverview);
+                    moviesFragment.setArguments(arguments);
+
+                    fragmentTransaction.add(R.id.moviesContainerFragment, moviesFragment);
+
+                    if (isTablet()){
+                        Bundle arguments2 = new Bundle();
+                        arguments2.putBoolean("tabletInfo", isTablet());
+                        arguments2.putString("moviePosterURL",moviePosterUrl[0]);
+                        arguments2.putString("movieTitle",movieTitle[0]);
+                        arguments2.putString("movieDate",movieDate[0]);
+                        arguments2.putString("movieRate",movieRate[0]);
+                        arguments2.putString("movieOverview", movieOverview[0]);
+                        detailsFragment.setArguments(arguments2);
+                        fragmentTransaction.add(R.id.moviesDetailsFragment, detailsFragment);
+                    }
+                    fragmentTransaction.commit();
+                }
+            }
             return true;
         }
 
